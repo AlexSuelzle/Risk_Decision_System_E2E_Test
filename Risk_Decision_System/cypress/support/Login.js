@@ -1,6 +1,8 @@
+const baseUrl = Cypress.config('baseUrl')
+
 Cypress.Commands.add('login', () => {
     //Login
-    cy.visit('https://risk-decision-system.herokuapp.com/login')
+    cy.visit('/login')
     cy.get('[class="btn btn-primary"]') //login button
         .click()
     cy.origin('https://id-staging.aifinyo.de/u/login’', () => {
@@ -11,7 +13,7 @@ Cypress.Commands.add('login', () => {
         cy.get('[type="submit"]')
             .click()
     })
-    cy.url('https://risk-decision-system.herokuapp.com')
+    cy.url(`${baseUrl}`)
     cy.get('.navbar-brand')
         .click()
     cy.get('[class="btn btn-primary"]') //login button

@@ -47,14 +47,14 @@ describe('Filter', () => {
             .should('contain', 'Status')
         
         //randomly select an option of workflow state
-        const status = ['Neu', 'In Bearbeitung (Risk)', 'Warte auf Unterlagen', 'Votum steht auf', 'Abgebrochen', 'Angenommen', 'Abgelehnt']
+        const status = ['Neue Anfrage', 'In Bearbeitung (Risk)', 'Warte auf Unterlagen', 'Votum steht auf', 'Abgebrochen', 'Angenommen', 'Abgelehnt']
         const randomStatus = status[Math.floor(Math.random() * status.length)]
 
         cy.get('#workflow_state')
             .select(randomStatus)
 
         //Search button
-        cy.get('.col-lg-1 > .btn')
+        cy.get('input.btn')
             .should('contain', 'Suchen')
             .click()
 
@@ -73,5 +73,9 @@ describe('Filter', () => {
                     cy.log('Results found')
                 }
             })
+        //Delete the filters
+        cy.get('.align-self-end > button.btn')
+            .click()
     })
+
 })
