@@ -1,6 +1,5 @@
 beforeEach(() => {
     cy.login() //see cypress/support/Login.js
-        .pause()
 })
 
 afterEach(() => {
@@ -28,7 +27,13 @@ describe('Filter', () => {
                 .should('exist')
                 .should('have.not.value')
         })
-        
+
+        //check existences of buttons
+        //search button
+        cy.get('input.btn')
+            .should('contain', 'Suchen')
+        //filter delete button
+        cy.get('.align-self-end > button.btn')   
     })
 
 
@@ -41,22 +46,23 @@ describe('Filter', () => {
 
         //Search button
         cy.get('input.btn')
-            .should('contain', 'Suchen')
             .click()
 
         //Delete the filter
-        cy.get('[name="reset-filter"]') //Delete button
+        cy.get('.align-self-end > button.btn') //Delete button
             .click({force: true})
-        cy.wait(2000)
+        cy.wait(500)
         cy.get('#product_type')
-            .should('have.not.value', randomProdtype)
+            .should('have.not.value')
+            .pause()
 
         //Verify if data is displayed in dashboard
-        cy.get('.card-body')
-            .should('contain', randomProdtype)
-        cy.wait(2000)
+        prodtype.forEach((prod) => {
+            cy.get('.card-body')
+                .should('contain', prod)
+        })
+        cy.wait(500)
         cy.log('Filter deleted successfully!')
-
     })
 
 })
