@@ -80,7 +80,7 @@ describe('Filter', () => {
             cy.get('.align-self-end > button.btn') //delete button
                 .click({ force: true })
             cy.wait(500)
-                .pause()
+                .pause() //pause to see the filter is deleted; if needed click manuelly on the filter delete button
             cy.get(filter.id) //check if the filter is cleared
                 .should('have.not.value')
 
