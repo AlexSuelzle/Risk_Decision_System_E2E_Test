@@ -3,7 +3,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-    //cy.logout() //see cypress/support/Logout.js
+    cy.logout() //see cypress/support/Logout.js
 })
 
 describe('Filter', () => {
@@ -36,33 +36,56 @@ describe('Filter', () => {
         cy.get('.align-self-end > button.btn')   
     })
 
+    it('Use filter options', () => {
+        const filterOptions = [
+            {
+                id: '#product_type',
+                options: ['Factoring', 'Finetrading', 'Leasing']
+            },
+            {
+                id: '#inquiry_type',
+                options: ['Neu', 'Prolongation', 'Erhöhung']
+            },
+            {
+                id: '#needed_vote_level',
+                options: ['Sales/Kundenbetreuer', 'Risikomanager', 'Head of Risk', 'Risikovorstand', 'Vorstand']
+            },
+            {
+                id: '#workflow_state',
+                options: ['Neue Anfrage', 'In Bearbeitung', 'Warte auf Unterlagen', 'Votum steht aus', 'Abgebrochen', 'Angenommen', 'Abgelehnt']
+            }
+        ]
 
-    it('Use procuct type filter',() => {
-        //randomly select an option of product type
-        const prodtype = ['Factoring', 'Finetrading', 'Leasing']
-        const randomProdtype = prodtype[Math.floor(Math.random() * prodtype.length)]
-        cy.get('#product_type')
-            .select(randomProdtype)
+        //Iterate through each filter option
+        filterOptions.forEach((filter) => {
+            const randomOption = filter.options[Math.floor(Math.random() * filter.options.length)]
+            cy.get(filter.id)
+                .select(randomOption)
 
-        //Search button
-        cy.get('input.btn')
-            .click()
+            //Click on search button
+            cy.get('input.btn')
+                .click()
 
-        //Delete the filter
-        cy.get('.align-self-end > button.btn') //Delete button
-            .click({force: true})
-        cy.wait(500)
-        cy.get('#product_type')
-            .should('have.not.value')
-            .pause()
+            if (randomOption) {
+                cy.get('.card-body')
+                    .should('contain', randomOption)
+                    .should('not.contain', filter.options.filter(option => option !== randomOption))
+            } else {
+                cy.get('.card-body')
+                    .should('contain', '.alert')
+                    .should('contain', 'Es wurden keine Anfragen gefunden.')
+            }
 
-        //Verify if data is displayed in dashboard
-        prodtype.forEach((prod) => {
-            cy.get('.card-body')
-                .should('contain', prod)
-        })
-        cy.wait(500)
-        cy.log('Filter deleted successfully!')
+            //Delete filter
+            cy.get('.align-self-end > button.btn') //delete button
+                .click({ force: true })
+            cy.wait(500)
+                .pause()
+            cy.get(filter.id) //check if the filter is cleared
+                .should('have.not.value')
+
+            cy.log('Filter deleted successfully!')
+        })             
     })
 
 })
