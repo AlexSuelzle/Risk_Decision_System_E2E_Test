@@ -136,6 +136,65 @@ describe('Dashboard-Buttons', () => {
             const today = new Date().toISOString().split('T')[0]
             cy.get('#partner_crefo_index_date')
                 .type(today)
+
+            //address
+            cy.fixture('address').then((address) => {
+                cy.get('#partner_street')
+                    .type(address.street)
+                cy.get('#partner_postal_code')
+                    .type(address.zip)
+                cy.get('#partner_city')
+                    .type(address.city)
+            })
+
+            //date of foundation
+            const randomDate = getRandomDate()
+            function getRandomDate() {
+                const start = new Date(1900, 0, 1)
+                const end = new Date()
+                return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+            }
+            cy.get('#partner_date_of_foundation')
+                .type(randomDate.toISOString().split('T')[0])
+
+            //employees count
+            const randomEmployer = Math.floor(Math.random() * 1000)
+            cy.get('#partner_number_of_employees')
+                .type(randomEmployer)
+            cy.get('#partner_number_of_employees_date')
+                .type(today)
+
+            //esg score
+            const randomESGScore = getRandomESGScore()
+            function getRandomESGScore() {
+                const ESGScore = ['1 - Hohe ESG Orientierung', '2 - ESG Orientiert', '3 - ESG Neutral', '4 - ESG Risiken erkennbar', '5 - Hohe ESG Risiken']
+                const randomIndex = Math.floor(Math.random() * ESGScore.length)
+                return ESGScore [randomIndex]
+            }
+            cy.get('#partner_esg_score')
+                .select(randomESGScore)
+                .wait(500)
+
+            //To save, not to save, that is the question
+            const randomDecision = Math.random() < 0.7; // Randomly decide whether to save or go back to dashboard
+            if (randomDecision) {
+                cy.get('input.btn') // Speichern-Button
+                    .should('contain', 'Partner speichern')
+                    .click()
+                cy.url(`${baseUrl}/partners/´`)
+                cy.get(':nth-child(2) > .alert')
+                    .should('contain', 'Partner was successfully created.')
+                cy.get('.col-4 > .card')
+                    .should('contain', companyName)
+                    .should('contain', randomNumber)
+                    .should('contain', randomContract)
+            } else {
+                cy.get('.breadcrumb > :nth-child(2) > a') //back to dashboard without saving
+                    .should('contain', 'Dashboard')
+                    .click()
+                cy.url(`${baseUrl}/`)
+            }
+
         } else {
             cy.get('[data-partner-target="previouslyImported"]')
                 .should('be.visible')
