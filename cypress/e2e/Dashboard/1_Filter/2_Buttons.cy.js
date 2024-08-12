@@ -188,7 +188,7 @@ describe('Dashboard-Buttons', () => {
             .find('tr')
             .should('have.length.gt', 0)
 
-        //partner view button in first line
+        //partner view button
         if (randomDecision) {
             cy.get('.tbody')
                 .should('contain', companyName)
