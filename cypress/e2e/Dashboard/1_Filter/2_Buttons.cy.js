@@ -1,24 +1,14 @@
-//baseurl
+//baseurl//
 const baseUrl = Cypress.config('baseUrl')
 
-//generate random mandatory number
-const randomNumber = 'M' + Math.floor(Math.random() * 1000000).toString().padStart(4, '0')
+//generate random number
+const randomNumber = Cypress.env('randomNumber') //see cypress.config.js
 
 //generate random companyName
-const randomWords = generateRandomWords(2)
-        function generateRandomWords(numWords) {
-            const words = ['Kilo', 'Mega', 'Giga', 'Tera', 'Peta', 'Exa', 'Zetta', 'Yotta', 'Bronto', 'Geopeta', 'Yottapeta', 'Zettabronto', 'Geoyotta', 'Brontobronto', 'Geobronto', 'Geogeo', 'Geobronto', 'Geoyotta']
-            const randomIndexes = []
-            while (randomIndexes.length < numWords) {
-                const randomIndex = Math.floor(Math.random() * words.length)
-                if (!randomIndexes.includes(randomIndex)) {
-                    randomIndexes.push(randomIndex)
-                }
-            }
-            const randomWords = randomIndexes.map(index => words[index])
-            return randomWords
-        }
-        const companyName = randomWords.join(' ') + ' Corp.'
+const companyName = Cypress.env('companyName') //see cypress.config.js
+
+//generate random decision
+const randomDecision = Math.random() < 0.7; // Randomly decide whether to save or go back to dashboard
 
 beforeEach(() => {
     cy.login() //see cypress/support/Login.js
@@ -59,30 +49,6 @@ describe('Dashboard-Buttons', () => {
         cy.log('Excel-Export works')
     })
 
-    it('Partner auflisten', () => {
-        cy.get('[href="/partners"]')
-            .click()
-        cy.url(`${baseUrl}/partners`)
-        
-        //check table headers
-        cy.get('thead > tr > :nth-child(1)')
-            .should('have.text', 'Name')
-        cy.get('thead > tr > :nth-child(2)')
-            .should('have.text', 'External')
-        
-        //check table content
-        cy.get('tbody')
-            .should('exist')
-            .find('tr')
-            .should('have.length.gt', 0)
-
-        //partner view button in first line
-        cy.get('tbody > :nth-child(1) > :nth-child(3)')
-            .click()
-        cy.url(`${baseUrl}/partners/´`)
-        cy.log('Partner view button works')
-    })
-
     it('Partner importieren', () => {
         cy.get('[href="/partners/new"]')
             .click()
@@ -94,6 +60,8 @@ describe('Dashboard-Buttons', () => {
         cy.get('.col-sm-1 > .btn') //Importieren-Button
             .should('contain', 'Importieren')
             .click()
+            .pause()
+        cy.wait(500)
         if (cy.get('[data-partner-target="previouslyImported"]').should('not.be.visible')) {
             cy.get('#partner_name')
                 .should('be.empty')
@@ -176,7 +144,6 @@ describe('Dashboard-Buttons', () => {
                 .wait(500)
 
             //To save, not to save, that is the question
-            const randomDecision = Math.random() < 0.7; // Randomly decide whether to save or go back to dashboard
             if (randomDecision) {
                 cy.get('input.btn') // Speichern-Button
                     .should('contain', 'Partner speichern')
@@ -202,6 +169,38 @@ describe('Dashboard-Buttons', () => {
                 .click()
             cy.url(`${baseUrl}/partners/´`)
         }
+    })
 
+    it('Partner auflisten', () => {
+        cy.get('[href="/partners"]')
+            .click()
+        cy.url(`${baseUrl}/partners`)
+        
+        //check table headers
+        cy.get('thead > tr > :nth-child(1)')
+            .should('have.text', 'Name')
+        cy.get('thead > tr > :nth-child(2)')
+            .should('have.text', 'External')
+        
+        //check table content
+        cy.get('.tbody')
+            .should('exist')
+            .find('tr')
+            .should('have.length.gt', 0)
+
+        //partner view button in first line
+        if (randomDecision) {
+            cy.get('.tbody')
+                .should('contain', companyName)
+                .find(':nth-child(1) > :nth-child(3) > a')
+                .click()
+            cy.url(`${baseUrl}/partners/´`)
+            cy.log('Partner view button works')
+        } else {
+            cy.get('tbody > :nth-child(1) > :nth-child(3)')
+                .click()
+            cy.url(`${baseUrl}/partners/´`)
+            cy.log('Partner view button works')
+        }
     })
 })

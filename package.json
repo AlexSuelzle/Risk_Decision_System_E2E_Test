@@ -1,0 +1,13 @@
+{
+  "name": "risk_decision_system_e2e_test",
+  "version": "1.0.0",
+  "description": "Automation testing of risk decision system using cypress",
+  "main": "cypress.config.js",
+  "scripts": {
+    "cy:open": "npx cypress open",
+    "cy:run": "npx cypress run"
+  },
+  "keywords": ["automation", "cypress"],
+  "author": "Alexander Sülzle",
+  "license": "ISC"
+}
