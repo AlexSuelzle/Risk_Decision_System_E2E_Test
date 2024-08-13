@@ -8,46 +8,17 @@ const randomNumber = Cypress.env('randomNumber') //see cypress.config.js
 const companyName = Cypress.env('companyName') //see cypress.config.js
 
 //generate random decision
-const randomDecision = Math.random() < 0.7; // Randomly decide whether to save or go back to dashboard
+const randomDecision = Cypress.env('randomDecision') // Randomly decide whether to save or go back to dashboard
 
 beforeEach(() => {
     cy.login() //see cypress/support/Login.js
 })
 
 afterEach(() => {
-    //cy.logout() //see cypress/support/Logout.js
+    cy.logout() //see cypress/support/Logout.js
 })
 
-describe('Dashboard-Buttons', () => {
-
-    it('Check the existence of dashboard buttons', () => {
-        //Excel-Export-Button
-        cy.get('[href="/inquiries.xlsx"]')
-            .should('have.text', 'Excel Export')
-
-        //Partner importieren-Button
-        cy.get('[href="/partners/new"]')
-            .should('have.text', 'Partner importieren')
-
-        //Partner auflisten-Button
-        cy.get('[href="/partners"]')
-            .should('have.text', 'Partner auflisten')
-        
-        cy.log('All buttons exist')
-    })
-    
-    it('Excel-Export', () => {
-        //Excel-Exports-Button
-        cy.get('[href="/inquiries.xlsx"]')
-            .click()
-            
-        const today = new Date().toLocaleDateString('en-GB').split('/').join('.')
-        const filePath = `C:/Users/AlexanderSülzle¦aifi/Desktop/Risk_Decision_System_E2E_Test/cypress/downloads/Anfragen bis ${today}.xlsx`
-
-        cy.readFile(filePath)
-            .should('exist')
-        cy.log('Excel-Export works')
-    })
+describe('Partner Import', () => {
 
     it('Partner importieren', () => {
         cy.get('[href="/partners/new"]')
@@ -168,39 +139,6 @@ describe('Dashboard-Buttons', () => {
             cy.get('[href="/partners/´"]')
                 .click()
             cy.url(`${baseUrl}/partners/´`)
-        }
-    })
-
-    it('Partner auflisten', () => {
-        cy.get('[href="/partners"]')
-            .click()
-        cy.url(`${baseUrl}/partners`)
-        
-        //check table headers
-        cy.get('thead > tr > :nth-child(1)')
-            .should('have.text', 'Name')
-        cy.get('thead > tr > :nth-child(2)')
-            .should('have.text', 'External')
-        
-        //check table content
-        cy.get('.tbody')
-            .should('exist')
-            .find('tr')
-            .should('have.length.gt', 0)
-
-        //partner view button
-        if (randomDecision) {
-            cy.get('.tbody')
-                .should('contain', companyName)
-                .find(':nth-child(1) > :nth-child(3) > a')
-                .click()
-            cy.url(`${baseUrl}/partners/´`)
-            cy.log('Partner view button works')
-        } else {
-            cy.get('tbody > :nth-child(1) > :nth-child(3)')
-                .click()
-            cy.url(`${baseUrl}/partners/´`)
-            cy.log('Partner view button works')
         }
     })
 })

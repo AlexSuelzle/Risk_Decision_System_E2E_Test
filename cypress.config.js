@@ -10,6 +10,7 @@ module.exports = defineConfig({
   env: {
     randomNumber: generateRandomNumber(),
     companyName: generateRandomCompanyName(),
+    randomDecision: generateRandomDecision(),
   },
 });
 
@@ -33,4 +34,9 @@ function generateRandomWords(numWords) {
     }
   }
   return randomIndexes.map(index => words[index]);
+}
+
+//generate random decision
+function generateRandomDecision() {
+  return Math.random() < 0.7; // Randomly decide whether to save or go back to dashboard
 }
