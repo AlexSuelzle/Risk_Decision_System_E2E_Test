@@ -39,19 +39,19 @@ describe('Usage of filter', () => {
             cy.get('input.btn')
                 .click()
 
-                cy.get('.card-body').then(($body) => {
-                    if ($body.find('.alert').length > 0 && $body.text().includes('Es wurden keine Anfragen gefunden.')) {
-                      cy.log('No requests found with the selected filter option!');
-                    } else {
-                      cy.get('.card-body').should('contain', randomOption);
-                      filter.options.forEach(option => {
-                        if (option !== randomOption) {
-                          cy.get('.card-body').should('not.contain', option);
-                        }
-                      });
+            cy.get('.card-body').then(($body) => {
+                if ($body.find('.alert').length > 0 && $body.text().includes('Es wurden keine Anfragen gefunden.')) {
+                    cy.log('No requests found with the selected filter option!')
+                } else {
+                    cy.get('.card-body').should('contain', randomOption)
+                    filter.options.forEach(option => {
+                    if (option !== randomOption) {
+                        cy.get('.card-body')
+                            .should('not.contain', option)
                     }
-                  });
-                  
+                    })
+                }
+            })                 
 
             //Delete filter
             cy.get('.align-self-end > button.btn') //delete button
