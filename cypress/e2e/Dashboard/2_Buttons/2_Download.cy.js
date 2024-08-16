@@ -1,4 +1,4 @@
-//baseurl//
+//baseurl
 const baseUrl = Cypress.config('baseUrl')
 
 beforeEach(() => {
