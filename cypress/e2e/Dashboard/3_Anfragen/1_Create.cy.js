@@ -1,4 +1,4 @@
-import { partnerlist } from '../../Setup';
+import { partnerlist } from '../../Setup'
 
 const randomDecision = Cypress.env('randomDecision')
 
