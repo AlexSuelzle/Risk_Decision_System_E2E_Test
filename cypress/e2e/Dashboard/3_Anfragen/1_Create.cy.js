@@ -12,7 +12,7 @@ afterEach(() => {
     cy.logout() //siehe cypress/support/Logout.js
 })
 
-describe('Partnerlist', () => {
+describe('Create new inquiry', () => {
 
     it('Create new inquiry', () => {
         cy.contains('Neue Anfrage')

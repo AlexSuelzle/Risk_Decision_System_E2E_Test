@@ -1,3 +1,0 @@
-//aufrufen
-//download
-//löschen
