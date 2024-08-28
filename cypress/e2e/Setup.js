@@ -38,3 +38,14 @@ export function partnerlist() {
         cy.log('Partner view button works')
     }
 }
+
+export function inquiryview() {
+    //Trigger the view action
+    cy.get('.card-body')
+        .find('[title="Anfrage anzeigen"]')
+        .first()
+        .click()
+    cy.wait(2000)
+    cy.url(`${baseUrl}/partners/´/inquiries/´`)
+    cy.log('Inquiry view button works')
+}

@@ -1,4 +1,5 @@
-const randomDecision = Cypress.env('randomDecision') //siehe cypress.config.json
+import { inquiryview } from '../../Setup'
+
 const baseUrl = Cypress.config('baseUrl') //siehe cypress.json
 
 beforeEach(() => {
@@ -12,14 +13,7 @@ afterEach(() => {
 describe('Using inquiry options', () => {
 
     it('Inquiry view', () => {
-        //Trigger the view action
-        cy.get('.card-body')
-            .find('[title="Anfrage anzeigen"]')
-            .first()
-            .click()
-        cy.wait(2000)
-        cy.url(`${baseUrl}/partners/´/inquiries/´`)
-        cy.log('Inquiry view button works')
+        inquiryview() //see cypress/e2e/Setup.js
     })
 
     it('Download inquiry', () => {
