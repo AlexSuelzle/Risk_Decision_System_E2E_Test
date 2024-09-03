@@ -1,6 +1,7 @@
 //import { inquiryview } from '../../Setup'
 
 const baseUrl = Cypress.config('baseUrl') //siehe cypress.json
+const randomDecision = Cypress.env('randomDecision') //siehe cypress.json
 
 beforeEach(() => {
     cy.login() //siehe cypress/support/Login.js
@@ -127,5 +128,151 @@ describe('Inquiry Workflow', () => {
             .first()
             .click()
         cy.log('New BWA deleted')
+
+        //SuSa
+        cy.contains('SuSa')
+            .click()
+        cy.url(`${baseUrl}/partners/´/inquiries/´/totales_balances_lists`)
+
+        //add new SuSa
+        cy.contains('Neue SuSa')
+            .click()
+        //select months
+        cy.get('#totals_balances_list_from_month')
+            .select(selectedMonth.toString())
+        cy.get('#totals_balances_list_until_month')
+            .select(selectedMonth.toString())
+        //select years
+        cy.get('#totals_balances_list_from_year')
+            .clear()
+            .type(currentYear)
+        cy.get('#totals_balances_list_until_year')
+            .clear()
+            .type(currentYear)
+        
+        //save new SuSa
+        cy.contains('Speichern')
+            .click()
+        cy.get('.alert')
+            .should('contain', 'SuSa wurde erstellt.')
+        cy.log('New SuSa created')
+
+        //Bankenspiegel
+        //cy.contains('Bankenspiegel')
+        //    .click()
+        //cy.url(`${baseUrl}/partners/´/inquiries/´/bank_overviews`)
+        //add new bank overview
+        //cy.contains('Bankenspiegel hinzufügen')
+        //    .click()
+        //cy.wait(2000)
+        //cy.get('#bank-overview-modal')
+        //    .should('be.visible')
+        
+        //don't find elements. I don't know why
+        //select months
+        //cy.get('#bank-overview-modal > .modal-dialog > .modal-content > form > .modal-body > .row > :nth-child(1) > .form-group > #bank_overview_from_month')
+        //    .select('Januar')
+        //cy.get('#bank-overview-modal > .modal-dialog > .modal-content > form > .modal-body > .row > :nth-child(3) > .form-group > #bank_overview_until_month')
+        //    .select('Dezember')
+        //select years
+        //cy.get('#bank-overview-modal > .modal-dialog > .modal-content > form > .modal-body > .row > :nth-child(2) > .form-group > #bank_overview_from_year')
+        //    .clear()
+        //    .type(currentYear)
+        //cy.get('#bank-overview-modal > .modal-dialog > .modal-content > form > .modal-body > .row > :nth-child(4) > .form-group > #bank_overview_until_year')
+        //    .clear()
+        //    .type(currentYear)
+        //liabilities
+        //cy.get('#bank-overview-modal > .modal-dialog > .modal-content > form > .modal-body > .row > :nth-child(6) > .form-group > .input-group > #bank_overview_liabilities')
+        //    .type(randomValue)
+        //save new bank overview
+        //cy.contains('Speichern')
+        //    .click()
+        //cy.get('.alert')
+        //    .should('contain', 'Bankenspiegel wurde gespeichert.')
+        //cy.get('.modal')
+        //    .should('not.be.visible')
+
+        //delete bank overview
+        //cy.get('Löschen')
+        //    .first()
+        //    .click()
+        //cy.log('New bank overview deleted')
+
+        //Kontoanalyse
+        cy.contains('Kontoanalyse')
+            .click()
+        cy.url(`${baseUrl}/partners/´/inquiries/´/account_analyses`)
+
+        //add new account analysis
+        if (randomDecision) {
+            //new account analysis
+            cy.contains('neue Kontoanalyse')
+                .click({force: true})
+                .then(() => {
+                    //add some datas
+                    //Zahlungen mit Skonto
+                    cy.get('#account_analysis_discount_number')
+                        .type(Math.floor(Math.random() * 10))
+                    cy.get('#account_analysis_discount_amount')
+                        .type(randomValue)
+                    //Notes
+                    cy.get('#account_analysis_notes')
+                        .type('Das ist nur ein Test. Ignoriere mich bitte.')
+                    //save new account analysis
+                    cy.contains('Speichern')
+                        .click()
+            })
+        } else {
+            //new short account evaluation
+            cy.contains('neue kurze Kontoauswertung')
+                .click()
+                .then(() => {
+                    //add some datas
+                    //Bankkonto
+                    cy.get('[data-action="click->account-evaluation#addBankAccount"]')
+                        .click()
+                    //Bankname
+                    cy.get('.mb-1 > :nth-child(1) > .form-control')
+                        .type('DEUTSCHE KREDITBANK BERLIN')
+                    //IBAN
+                    cy.get('.bank-account > .mb-1 > :nth-child(2) > .form-control')
+                        .type('DE02120300000000202051')
+                    //save new short account evaluation
+                    cy.contains('Speichern')
+                        .click()
+            })       
+        }
+        cy.log('New account analysis created')
+
+        //delete account analysis
+        cy.contains('löschen')
+            .first()
+            .click()
+        cy.log('New account analysis deleted')
+
+        //Vota
+        cy.contains('Vota')
+            .click()
+        cy.url(`${baseUrl}/partners/´/inquiries/´/votes`)
+        //access or denied the inquiry
+        if (randomDecision) {
+            cy.get('#inquiry_entry_vote_accept_true')
+                .check()
+            cy.contains('Speichern')
+                .click()
+        } else {
+            cy.get('#inquiry_entry_vote_accept_false')
+                .check()
+            cy.contains('Speichern')
+                .click()
+        }
+        //delete or lock the vote
+        if (randomDecision) {
+            cy.contains('Sperren')
+                .click()
+        } else {
+            cy.contains('Löschen')
+                .click()
+        }
     })
 })
