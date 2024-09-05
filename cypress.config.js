@@ -38,5 +38,5 @@ function generateRandomWords(numWords) {
 
 //generate random decision
 function generateRandomDecision() {
-  return Math.random() < 0.51; // Randomly decide whether to save or go back to dashboard
+  return Math.random() < 0.51
 }

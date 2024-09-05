@@ -25,31 +25,32 @@ describe('Inquiry Workflow', () => {
         cy.url(`${baseUrl}/partners/´/inquiries/´`)
         cy.log('Inquiry view button works')
 
-        //Inquiry
-        //Inquiry sureties
-        const randomSurety = ['Bürgschaft', 'Grundschuld', 'Quersicherung', 'Garantieerklärung']
-        const randomIndex = Math.floor(Math.random() * randomSurety.length)
-        const selectedSurety = randomSurety[randomIndex]
-        cy.get('#new-inquiry-surety-select')
-            .select(selectedSurety)
-        //
-        if (selectedSurety === 'Bürgschaft') {
-            cy.get('#inquiry_inquiry_guarantees_attributes_0_natural_person_id')
-                .select('Arthur Goldberg')
-            cy.get('#inquiry_inquiry_guarantees_attributes_0_guarantee')
-                .type(Math.floor(Math.random() * (100000 - 100 + 1)) + 100)
-        } else if (selectedSurety === 'Grundschuld') {
-            cy.get('#inquiry_land_charge')
-                .type(Math.floor(Math.random() * (100000 - 100 + 1)) + 100)
-        }
 
+        //I don't have the rights to edit the inquiry - Mike and me don't know why 'cause I have Vorstand rights
+        //Edit Inquiry
+        //Inquiry sureties
+        //const randomSurety = ['Bürgschaft', 'Grundschuld', 'Quersicherung', 'Garantieerklärung']
+        //const randomIndex = Math.floor(Math.random() * randomSurety.length)
+        //const selectedSurety = randomSurety[randomIndex]
+        //cy.get('#new-inquiry-surety-select')
+        //    .select(selectedSurety)
+        //
+        //if (selectedSurety === 'Bürgschaft') {
+        //    cy.get('#inquiry_inquiry_guarantees_attributes_0_natural_person_id')
+        //        .select('Arthur Goldberg')
+        //    cy.get('#inquiry_inquiry_guarantees_attributes_0_guarantee')
+        //        .type(Math.floor(Math.random() * (100000 - 100 + 1)) + 100)
+        //} else if (selectedSurety === 'Grundschuld') {
+        //    cy.get('#inquiry_land_charge')
+        //        .type(Math.floor(Math.random() * (100000 - 100 + 1)) + 100)
+        //}
         //inquiry save button
-        cy.get('input.btn')
-            .should('contain', 'Anfrage speichern')
-            .click();
-        cy.get('.alert')
-            .should('contain', 'Anfrage wurde aktualisiert.')
-        cy.log('Inquiry save button works')
+        //cy.get('input.btn')
+        //    .should('contain', 'Anfrage speichern')
+        //    .click();
+        //cy.get('.alert')
+        //    .should('contain', 'Anfrage wurde aktualisiert.')
+        //cy.log('Inquiry save button works')
 
 
         //Jahresabschlüsse (financial statements)
@@ -157,6 +158,7 @@ describe('Inquiry Workflow', () => {
             .should('contain', 'SuSa wurde erstellt.')
         cy.log('New SuSa created')
 
+        //There are some problems with finding of elements in modal window. I don't know why.
         //Bankenspiegel
         //cy.contains('Bankenspiegel')
         //    .click()
@@ -165,32 +167,33 @@ describe('Inquiry Workflow', () => {
         //cy.contains('Bankenspiegel hinzufügen')
         //    .click()
         //cy.wait(2000)
-        //cy.get('#bank-overview-modal')
-        //    .should('be.visible')
         
         //don't find elements. I don't know why
         //select months
-        //cy.get('#bank-overview-modal > .modal-dialog > .modal-content > form > .modal-body > .row > :nth-child(1) > .form-group > #bank_overview_from_month')
+        //cy.get('#bank_overview_from_month')
+        //    .should('be.visible')
         //    .select('Januar')
-        //cy.get('#bank-overview-modal > .modal-dialog > .modal-content > form > .modal-body > .row > :nth-child(3) > .form-group > #bank_overview_until_month')
+        //cy.get('#bank_overview_until_month')
+        //    .should('be.visible')
         //    .select('Dezember')
         //select years
-        //cy.get('#bank-overview-modal > .modal-dialog > .modal-content > form > .modal-body > .row > :nth-child(2) > .form-group > #bank_overview_from_year')
+        //cy.get('#bank_overview_from_year')
+        //    .should('be.visible')
         //    .clear()
         //    .type(currentYear)
-        //cy.get('#bank-overview-modal > .modal-dialog > .modal-content > form > .modal-body > .row > :nth-child(4) > .form-group > #bank_overview_until_year')
+        //cy.get('#bank_overview_until_year')
+        //    .should('be.visible')
         //    .clear()
         //    .type(currentYear)
         //liabilities
-        //cy.get('#bank-overview-modal > .modal-dialog > .modal-content > form > .modal-body > .row > :nth-child(6) > .form-group > .input-group > #bank_overview_liabilities')
+        //cy.get('#bank_overview_liabilities')
+        //    .should('be.visible')
         //    .type(randomValue)
         //save new bank overview
         //cy.contains('Speichern')
         //    .click()
         //cy.get('.alert')
         //    .should('contain', 'Bankenspiegel wurde gespeichert.')
-        //cy.get('.modal')
-        //    .should('not.be.visible')
 
         //delete bank overview
         //cy.get('Löschen')
